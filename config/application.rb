@@ -4,7 +4,9 @@ require 'httparty'
 require 'byebug'
 require 'i18n'
 require 'yaml'
-load 'config/configuration.rb'
+require_relative 'configuration'
+require_relative '../lib/models/pull_request'
+require_relative '../lib/models/repository'
 
 # Initialize application
 class Application
