@@ -20,14 +20,14 @@ class Repository < BitbucketApiBase
   # Fetch the list of all repositories for a given project
   def self.fetch_repositories_list(project_name)
     request_url = BASE_PROJECT_URL % { project: project_name }
-    response = HTTParty.get(request_url, headers: headers)
+    response = HTTParty.get(request_url, basic_auth: authentication_hash)
     response.parsed_response
   end
 
   # Fetch the data for a given repository
   def fetch_repository_details
     request_url = BASE_REPOSITORY_URL % { project: project_name, repository: name }
-    response = HTTParty.get(request_url, headers: self.class.headers)
+    response = HTTParty.get(request_url, authentication_hash: self.class.authentication_hash)
     response.parsed_response
   end
 end
