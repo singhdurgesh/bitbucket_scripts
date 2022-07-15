@@ -19,7 +19,7 @@ class PullRequest < BitbucketApiBase
   # Methods to fetch all pull requests for a given repo
   def self.fetch_pull_requests(repository)
     request_url = PULL_REQUEST_URL % { project: repository.project_name, repository: repository.name }
-    response = HTTParty.get(request_url, basic_auth: authentication_hash)
+    response = HTTParty.get(request_url, headers: headers)
     response.parsed_response
   end
 
@@ -28,19 +28,18 @@ class PullRequest < BitbucketApiBase
     body = {
       title: title,
       description: body,
-      source: { branch: source_branch },
-      destination: { branch: target_branch }
+      source: { branch: { name: source_branch } },
+      destination: { branch: { name: target_branch } }
     }
 
-    response = HTTParty.post(request_url, basic_auth: authentication_hash, body: body, type: :json)
+    response = HTTParty.post(request_url, headers: headers, body: body.to_json)
     response.parsed_response
   end
 
   def fetch_pull_request_details
     request_url = PULL_REQUEST_URL % { project: repository.project_name, repository: repository.name } + "/#{pull_request_id}"
 
-    response = HTTParty.get(request_url, basic_auth: self.class.authentication_hash)
-    # response = HTTParty.get(request_url, headers: self.class.headers)
+    response = HTTParty.get(request_url, headers: self.class.headers)
     response.parsed_response
   end
 end

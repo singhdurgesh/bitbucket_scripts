@@ -19,12 +19,13 @@ module CreatePullRequest
   details = pull_request.fetch_pull_request_details
   pp details
 
-  # Request to create a pull request
+  # # Request to create a pull request
   title = 'Add new feature, PR created from Ruby script'
   source_branch = 'add/create-pr-script'
   destination_branch = 'master'
   description = 'This is a test pull request'
 
+  pp 'Sending the request to generate PULL Request'
   response = PullRequest.create_pull_request(repository, title, description, destination_branch, source_branch)
   pp response
 end
