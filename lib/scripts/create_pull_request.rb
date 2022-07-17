@@ -41,4 +41,16 @@ module CreatePullRequest
   pull_request = PullRequest.new(repository: repository, pull_request_id: '10')
   response = pull_request.merge_pull_request(type, message, close_source_branch, merge_strategy)
   pp response
+
+  # Creation of Pull Request with a Markdown file
+  title = 'Add new feature, PR created from Ruby script'
+  source_branch = 'add/support-for-markdown-file'
+  destination_branch = 'development'
+  # Read the description from a markdown file
+  description_file_path = "#{Configuration.value_of('root_dir_path')}/data/templates/pull_requests/create/sample.md"
+  description = File.read(description_file_path)
+
+  pp 'Sending the request to generate PULL Request'
+  response = PullRequest.create_pull_request(repository, title, description, destination_branch, source_branch)
+  pp response
 end
