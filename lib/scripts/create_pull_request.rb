@@ -21,20 +21,24 @@ module CreatePullRequest
 
   # # Request to create a pull request
   title = 'Add new feature, PR created from Ruby script'
-  source_branch = 'add/create-pr-script'
-  destination_branch = 'master'
+  source_branch = 'improve/add-func-for-decline-and-merge-pr'
+  destination_branch = 'development'
   description = 'This is a test pull request'
 
   pp 'Sending the request to generate PULL Request'
   response = PullRequest.create_pull_request(repository, title, description, destination_branch, source_branch)
   pp response
 
-  pull_request = PullRequest.new(repository: repository, pull_request_id: '%<pull_request_id>')
+  pull_request = PullRequest.new(repository: repository, pull_request_id: '10')
   response = pull_request.decline_pull_request
   pp response
 
-  puts "Sending the request to Merge  the PULL Request"
-  pull_request = PullRequest.new(repository: repository, pull_request_id: '%<pull_request_id>')
-  response = pull_request.merge_pull_request
+  puts 'Sending the request to Merge  the PULL Request'
+  type = 'MERGE'
+  message = 'PR is being merged with a Script'
+  close_source_branch = true
+  merge_strategy = 'merge_commit'
+  pull_request = PullRequest.new(repository: repository, pull_request_id: '10')
+  response = pull_request.merge_pull_request(type, message, close_source_branch, merge_strategy)
   pp response
 end

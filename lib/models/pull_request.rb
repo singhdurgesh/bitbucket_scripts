@@ -7,17 +7,17 @@ require_relative 'bitbucket_api_base'
 # Author: Durgesh Singh :)
 class PullRequest < BitbucketApiBase
   # APIs Source => https://developer.atlassian.com/cloud/bitbucket/rest/api-group-pullrequests/#api-group-pullrequests
-  PULL_REQUEST_URL = 'https://api.bitbucket.org/2.0/repositories/%{project}/%{repository}/pullrequests'
+  PULL_REQUEST_URL = 'https://api.bitbucket.org/2.0/repositories/%<project>s/%<repository>s/pullrequests'
   LOCATIONS = [
-    SHOW = '/%<pull_request_id>',
-    DECLINE = '/%{pull_request_id}/decline',
-    MERGE = '/%{pull_request_id}/merge'
-  ]
+    SHOW = '/%<pull_request_id>s',
+    DECLINE = '/%<pull_request_id>s/decline',
+    MERGE = '/%<pull_request_id>s/merge'
+  ].freeze
 
   attr_accessor :repository, :pull_request_id
 
   def initialize(options = {})
-    self.repository = options[:repository].to_s
+    self.repository = options[:repository]
     self.pull_request_id = options[:pull_request_id].to_i
     super
   end
@@ -60,15 +60,15 @@ class PullRequest < BitbucketApiBase
     response.parsed_response
   end
 
-  def merge_pull_request
+  def merge_pull_request(type, message, close_source_branch = true, merge_strategy = 'merge_commit')
     request_url = format(PULL_REQUEST_URL + MERGE, project: repository.project_name, repository: repository.name,
                                                    pull_request_id: pull_request_id)
 
     body = {
-      type: 'Feature',
-      message: 'Merger from Ruby script',
-      close_source_branch: true,
-      merge_strategy: 'merge_commit'
+      type: type,
+      message: message,
+      close_source_branch: close_source_branch,
+      merge_strategy: merge_strategy
     }
 
     response = HTTParty.post(request_url, headers: self.class.headers, body: body.to_json)
