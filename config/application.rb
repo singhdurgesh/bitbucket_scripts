@@ -12,4 +12,7 @@ require_relative '../lib/models/repository'
 class Application
   # Initialze configurations
   Configuration.set_keys
+
+  # Set the root directory path
+  Configuration.set_value(:root_dir_path, File.expand_path('..', __dir__))
 end
