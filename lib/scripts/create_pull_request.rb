@@ -28,4 +28,13 @@ module CreatePullRequest
   pp 'Sending the request to generate PULL Request'
   response = PullRequest.create_pull_request(repository, title, description, destination_branch, source_branch)
   pp response
+
+  pull_request = PullRequest.new(repository: repository, pull_request_id: '%<pull_request_id>')
+  response = pull_request.decline_pull_request
+  pp response
+
+  puts "Sending the request to Merge  the PULL Request"
+  pull_request = PullRequest.new(repository: repository, pull_request_id: '%<pull_request_id>')
+  response = pull_request.merge_pull_request
+  pp response
 end
