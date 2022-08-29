@@ -16,6 +16,12 @@ dist/
 # Log files
 *.log
 
+# byebug history
+.byebug_history
+
+# configuration files
+config/application.yml
+
 # Package files
 *.jar
 
