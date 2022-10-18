@@ -29,7 +29,7 @@ class PullRequest < BitbucketApiBase
     response.parsed_response
   end
 
-  def self.create_pull_request(repository, title, body, target_branch, source_branch)
+  def self.create_pull_request(repository, title, body, target_branch, source_branch, reviewers_uuids = [])
     request_url = format(PULL_REQUEST_URL, project: repository.project_name, repository: repository.name)
     body = {
       title: title,
@@ -37,6 +37,8 @@ class PullRequest < BitbucketApiBase
       source: { branch: { name: source_branch } },
       destination: { branch: { name: target_branch } }
     }
+
+    body[:reviewers] = reviewers_uuids.map { |uuid| { uuid: uuid } } unless reviewers_uuids.empty?
 
     response = HTTParty.post(request_url, headers: headers, body: body.to_json)
     response.parsed_response
